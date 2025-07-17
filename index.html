@@ -41,6 +41,23 @@
       font-size: 2rem;
       font-family: sans-serif;
     }
+
+    button {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      font-size: 2rem;
+      padding: 1rem 2rem;
+      background: #fff;
+      color: #333;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -55,8 +72,30 @@
     <!-- ou deixar vazio, se for só o vídeo -->
   </div>
 
+  <button id="playBtn">
+    ▶️ Tocar vídeo
+  </button>
+
   <script>
     const video = document.getElementById('bgVideo');
+    const playBtn = document.getElementById('playBtn');
+
+    // Tenta dar play automaticamente (iOS/Safari pode bloquear)
+    function tryPlay() {
+      video.play().catch(() => {
+        // Se não conseguir, mostra botão de play
+        playBtn.style.display = 'block';
+      });
+    }
+
+    // Tenta dar play ao carregar
+    document.addEventListener('DOMContentLoaded', tryPlay);
+
+    // Tenta dar play ao interagir (iOS exige interação do usuário)
+    playBtn.addEventListener('click', () => {
+      video.play();
+      playBtn.style.display = 'none';
+    });
 
     // Quando o vídeo terminar, ele congela no último frame
     video.addEventListener('ended', function () {
