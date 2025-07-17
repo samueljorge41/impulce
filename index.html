@@ -5,19 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Impulce</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body, html { height: 100%; overflow: hidden; background: #fff; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    .video-bg {
+    body, html {
+      height: 100%;
+      overflow: hidden; /* Evita rolagem */
+      background: #fff;
+    }
+
+    .video-bg, .fallback-img {
       position: fixed;
       top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      left: 0;
       width: 100vw;
-      height: 100vh;
-      object-fit: cover;
+      height: auto;
+      min-height: 100vh;
+      transform: translateY(-50%);
+      object-fit: contain;
       z-index: -1;
       background: #fff;
+    }
+
+    .fallback-img {
+      display: none; /* Oculta a imagem até ser necessário */
     }
 
     .conteudo {
@@ -52,36 +66,62 @@
 </head>
 <body>
 
-  <!-- ✅ Atributos críticos: autoplay + muted + playsinline + preload -->
+  <!-- Vídeo -->
   <video class="video-bg" autoplay muted playsinline preload="auto" id="bgVideo">
     <source src="anim.mp4" type="video/mp4">
     Seu navegador não suporta vídeo.
   </video>
 
+  <!-- Imagem fallback -->
+  <img src="fallback.jpg" alt="Imagem de fundo" class="fallback-img" id="fallbackImg">
+
   <div class="conteudo">
-    <!-- Conteúdo opcional -->
+    <!-- Conteúdo sobre o vídeo -->
   </div>
 
   <button id="playBtn">▶️ Tocar vídeo</button>
 
   <script>
     const video = document.getElementById('bgVideo');
+    const fallbackImg = document.getElementById('fallbackImg');
     const playBtn = document.getElementById('playBtn');
 
-    // Tenta dar play assim que possível
-    function tryPlay() {
-      video.play().catch(() => {
-        // Se iOS bloquear, mostra botão
-        playBtn.style.display = 'block';
-      });
+    function showFallback() {
+      video.style.display = 'none';
+      fallbackImg.style.display = 'block';
     }
+
+    // Tenta dar play automaticamente
+    function tryPlay() {
+      video.play()
+        .then(() => {
+          console.log("Vídeo tocando...");
+        })
+        .catch(() => {
+          console.log("Autoplay bloqueado. Mostrando imagem.");
+          showFallback();
+        });
+    }
+
+    // Timeout extra de segurança (caso o play não aconteça)
+    setTimeout(() => {
+      if (video.paused) {
+        console.log("Timeout: vídeo não rodou. Mostrando imagem.");
+        showFallback();
+      }
+    }, 2000);
 
     document.addEventListener('DOMContentLoaded', tryPlay);
 
-    // Interação do usuário caso necessário
+    // Caso queira permitir interação manual (opcional)
     playBtn.addEventListener('click', () => {
-      video.play();
-      playBtn.style.display = 'none';
+      video.play().then(() => {
+        playBtn.style.display = 'none';
+      });
+    });
+
+    video.addEventListener('ended', function () {
+      video.pause();
     });
   </script>
 
