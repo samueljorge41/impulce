@@ -1,79 +1,383 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Impulce</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body, html {
-      height: 100%;
-      overflow: hidden; /* Evita rolagem */
-    }
-
-    .video-bg {
-      position: fixed;
-      top: 50%;
-      left: 0;
-      width: 100vw;
-      height: auto;
-      min-height: 100vh;
-      transform: translateY(-50%);
-      object-fit: contain;
-      z-index: -1;
-      pointer-events: none; /* Evita interação do usuário com o vídeo */
-      background: rgb(255, 255, 255); /* Preenche as faixas acima / abaixo do vídeo */
-    }
-
-    .conteudo {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      color: white;
-      font-size: 2rem;
-      font-family: sans-serif;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impulce - Agência de Marketing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --orange1: #ee5d18;
+            --orange2: #d73810;
+            --black: #181818;
+            --white: #fff;
+        }
+        body {
+            margin: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--black) 60%, var(--orange1) 100%);
+            color: var(--white);
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 24px;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 32px 0 0 0;
+        }
+        .logo-img {
+            height: 54px;
+            width: auto;
+        }
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            text-align: center;
+            position: relative;
+        }
+        .divider {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--orange1), var(--orange2));
+            border: none;
+            margin: 36px 0 36px 0;
+        }
+        .headline {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: var(--white);
+            text-shadow: 0 2px 12px #0008;
+            min-height: 3.8em; /* espaço para 2 linhas */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .typing-line {
+            display: inline-block;
+            border-right: 2px solid var(--orange1);
+            white-space: nowrap;
+            overflow: hidden;
+            animation: blink-caret 0.7s steps(1) infinite;
+        }
+        @keyframes blink-caret {
+            0%, 100% { border-color: var(--orange1); }
+            50% { border-color: transparent; }
+        }
+        .hero-bg { display: none; }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        .subheadline {
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: 32px;
+            color: #fff;
+            opacity: 0.92;
+        }
+        .cta-btn {
+            background: linear-gradient(90deg, var(--orange1), var(--orange2));
+            color: var(--white);
+            border: none;
+            border-radius: 32px;
+            padding: 18px 38px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 24px #d7381080;
+            transition: transform 0.2s;
+        }
+        .cta-btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(90deg, var(--orange2), var(--orange1));
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 64px 0 32px 0;
+            color: var(--orange1);
+            text-align: center;
+        }
+        .cards {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .card {
+            background: #222;
+            border-radius: 18px;
+            padding: 32px 24px;
+            min-width: 220px;
+            max-width: 320px;
+            flex: 1;
+            text-align: center;
+            box-shadow: 0 2px 16px #0006;
+        }
+        .card svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 18px;
+            fill: var(--orange1);
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .authority {
+            text-align: center;
+            margin: 64px 0 32px 0;
+        }
+        .authority-logos {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .authority-logos img {
+            height: 38px;
+            filter: grayscale(1) brightness(1.2);
+        }
+        .authority-text {
+            font-size: 1.1rem;
+            color: #fff;
+            opacity: 0.85;
+        }
+        .testimonial {
+            background: #222;
+            border-radius: 14px;
+            display: inline-block;
+            padding: 18px 24px;
+            margin-top: 18px;
+            font-size: 1rem;
+            color: #fff;
+            box-shadow: 0 2px 12px #0005;
+        }
+        .about {
+            text-align: center;
+            margin: 64px 0 32px 0;
+        }
+        .about-title {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--orange2);
+            margin-bottom: 18px;
+        }
+        .about-text {
+            font-size: 1.1rem;
+            color: #fff;
+            opacity: 0.88;
+            margin-bottom: 8px;
+        }
+        .final-cta {
+            text-align: center;
+            margin: 64px 0 32px 0;
+        }
+        .final-cta-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: var(--orange1);
+        }
+        .whatsapp-btn {
+            background: linear-gradient(90deg, var(--orange2), var(--orange1));
+            color: var(--white);
+            border: none;
+            border-radius: 32px;
+            padding: 16px 36px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 24px #ee5d1880;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.2s;
+        }
+        .whatsapp-btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(90deg, var(--orange1), var(--orange2));
+        }
+        .whatsapp-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: #fff;
+        }
+        footer {
+            background: #181818;
+            padding: 32px 0 16px 0;
+            color: #fff;
+            text-align: center;
+            font-size: 1rem;
+        }
+        .footer-social {
+            margin-bottom: 12px;
+        }
+        .footer-social a {
+            color: var(--orange1);
+            margin: 0 10px;
+            font-size: 1.3rem;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-social a:hover {
+            color: var(--orange2);
+        }
+        .footer-info {
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+        .footer-policy {
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+        @media (max-width: 900px) {
+            .cards {
+                flex-direction: column;
+                gap: 24px;
+            }
+            .card {
+                max-width: 100%;
+            }
+        }
+        @media (max-width: 600px) {
+            .headline { font-size: 2rem; }
+            .section-title { font-size: 1.3rem; }
+            .about-title { font-size: 1.2rem; }
+            .final-cta-title { font-size: 1.1rem; }
+            header { flex-direction: column; gap: 12px; }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <!-- Header / Logo -->
+        <header>
+            <img src="logo-impulce.png" alt="Logo Impulce" class="logo-img">
+        </header>
 
-  <video class="video-bg" autoplay muted playsinline id="bgVideo">
-    <source src="anim.mp4" type="video/mp4">
-    Seu navegador não suporta vídeo.
-  </video>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="headline">
+                    <span id="typing-line1" class="typing-line"></span>
+                    <br>
+                    <span id="typing-line2" class="typing-line"></span>
+                </div>
+                <div class="subheadline">Impulsionamos marcas com estratégia, criatividade e performance.</div>
+                <a href="#final-cta"><button class="cta-btn">Quero impulsionar meu negócio</button></a>
+            </div>
+        </section>
+        <div class="divider"></div>
+        <!-- O que fazemos / Benefícios -->
+        <section>
+            <div class="section-title">O que fazemos por você</div>
+            <div class="cards">
+                <div class="card">
+                    <!-- Estratégia de marketing sob medida -->
+                    <svg viewBox="0 0 48 48"><path d="M24 4a20 20 0 1 0 0 40 20 20 0 0 0 0-40zm0 36a16 16 0 1 1 0-32 16 16 0 0 1 0 32zm-2-22h4v10h-4zm0 12h4v4h-4z"/></svg>
+                    <div class="card-title">Estratégia de marketing sob medida</div>
+                </div>
+                <div class="card">
+                    <!-- Tráfego pago que gera resultado -->
+                    <svg viewBox="0 0 48 48"><path d="M8 40V8h32v32H8zm4-4h24V12H12v24zm8-8h8v4h-8zm0-8h8v4h-8z"/></svg>
+                    <div class="card-title">Tráfego pago que gera resultado</div>
+                </div>
+                <div class="card">
+                    <!-- Design que comunica e vende -->
+                    <svg viewBox="0 0 48 48"><path d="M24 4l8 16h-16l8-16zm0 40a16 16 0 1 1 0-32 16 16 0 0 1 0 32zm0-28a12 12 0 1 0 0 24 12 12 0 0 0 0-24z"/></svg>
+                    <div class="card-title">Design que comunica e vende</div>
+                </div>
+            </div>
+        </section>
+        <div class="divider"></div>
+        <!-- Prova de autoridade -->
+        <section class="authority">
+            <div class="authority-logos">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Facebook_Logo.png" alt="Cliente 1">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Cliente 2">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Google.png" alt="Cliente 3">
+            </div>
+            <div class="authority-text">Mais de 4 anos no digital transformando marcas</div>
+            <div class="testimonial">
+                <img src="https://img.icons8.com/color/48/000000/whatsapp--v1.png" alt="WhatsApp" style="height:22px;vertical-align:middle;margin-right:8px;">
+                "A Impulce mudou o jogo do nosso negócio. Atendimento top e resultado real!"<br>
+                <span style="font-size:0.9em;opacity:0.7;">- Cliente via WhatsApp</span>
+            </div>
+        </section>
 
-  <div class="conteudo">
-    <!-- Aqui você pode colocar uma logo ou frase -->
-    <!-- ou deixar vazio, se for só o vídeo -->
-  </div>
+        <!-- Sobre a Agência -->
+        <section class="about">
+            <div class="about-title">Quem somos</div>
+            <div class="about-text">Somos apaixonados por impulsionar marcas e negócios.</div>
+            <div class="about-text">Acreditamos em estratégia, criatividade e performance para gerar resultados reais.</div>
+            <div class="about-text">Nossa visão é transformar o marketing digital no Brasil.</div>
+        </section>
 
-  <script>
-    const video = document.getElementById('bgVideo');
+        <!-- Chamada final + CTA -->
+        <section class="final-cta" id="final-cta">
+            <div class="final-cta-title">Seu marketing merece mais estratégia. Vamos conversar?</div>
+            <a href="https://wa.me/5511999999999" target="_blank">
+                <button class="whatsapp-btn">
+                    <svg viewBox="0 0 32 32"><path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.658 4.617 1.902 6.594L4 29l7.594-1.902A11.96 11.96 0 0 0 16 27c6.627 0 12-5.373 12-12S22.627 3 16 3zm0 22c-1.934 0-3.797-.527-5.406-1.527l-.385-.229-4.516 1.129 1.129-4.516-.229-.385C6.527 18.797 6 16.934 6 15c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10zm5.406-7.594c-.297-.148-1.758-.867-2.031-.967-.273-.099-.472-.148-.672.148-.198.297-.767.967-.941 1.166-.173.198-.347.223-.644.074-.297-.148-1.255-.463-2.39-1.477-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.457.13-.605.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.52-.074-.148-.672-1.624-.921-2.225-.243-.583-.491-.504-.672-.513-.173-.009-.372-.011-.572-.011-.198 0-.52.074-.793.372-.273.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.877 1.214 3.075.149.198 2.099 3.205 5.086 4.369.712.307 1.267.491 1.701.629.715.228 1.366.196 1.88.119.574-.085 1.758-.719 2.006-1.413.248-.694.248-1.288.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+                    🚀 Falar com a Impulce no WhatsApp
+                </button>
+            </a>
+        </section>
+    </div>
 
-    function forcePlay() {
-      if (video.paused) {
-        video.play().catch(() => {});
-      }
-    }
+    <!-- Footer -->
+    <footer>
+        <div class="footer-social">
+            <a href="https://instagram.com/" target="_blank" title="Instagram"><svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zm4.25 3.25a5.25 5.25 0 1 1 0 10.5 5.25 5.25 0 0 1 0-10.5zm0 1.5a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5zm6.25.75a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/></svg></a>
+            <a href="https://facebook.com/" target="_blank" title="Facebook"><svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 5.019 3.676 9.163 8.438 9.877v-6.987h-2.54v-2.89h2.54V9.797c0-2.507 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.261c-1.243 0-1.631.771-1.631 1.562v1.875h2.773l-.443 2.89h-2.33v6.987C18.324 21.163 22 17.019 22 12z"/></svg></a>
+            <a href="mailto:contato@impulce.com.br" title="E-mail"><svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 2v.01L12 13 4 6.01V6h16zm-16 12V8.99l7.99 6.99c.39.34.99.34 1.38 0L20 8.99V18H4z"/></svg></a>
+        </div>
+        <div class="footer-info">
+            contato@impulce.com.br<br>
+            Rua Exemplo, 123 - São Paulo/SP
+        </div>
+        <div class="footer-policy">
+            © 2024 Impulce. Todos os direitos reservados. | <a href="#" style="color:var(--orange1);text-decoration:underline;">Política de Privacidade</a>
+        </div>
+    </footer>
+    <script>
+        // Animação de escrita digitando com quebra de linha
+        const lines = [
+            "Um marketing diferente.",
+            "Estratégico. Com resultado."
+        ];
+        const typingElems = [
+            document.getElementById('typing-line1'),
+            document.getElementById('typing-line2')
+        ];
+        let lineIdx = 0, charIdx = 0;
 
-    // Tenta dar play assim que possível
-    document.addEventListener('DOMContentLoaded', forcePlay);
-    window.addEventListener('load', forcePlay);
-    video.addEventListener('canplay', forcePlay);
-
-    // Quando o vídeo terminar, ele congela no último frame
-    video.addEventListener('ended', function () {
-      video.pause(); // só pra garantir
-    });
-  </script>
-
+        function typeLine() {
+            if (lineIdx < lines.length) {
+                if (charIdx <= lines[lineIdx].length) {
+                    typingElems[lineIdx].textContent = lines[lineIdx].slice(0, charIdx);
+                    charIdx++;
+                    setTimeout(typeLine, 55);
+                } else {
+                    lineIdx++;
+                    charIdx = 0;
+                    if (lineIdx < lines.length) setTimeout(typeLine, 350);
+                }
+            }
+        }
+        typeLine();
+    </script>
 </body>
 </html>
