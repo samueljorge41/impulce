@@ -5,29 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Impulce</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body, html {
-      height: 100%;
-      overflow: hidden; /* Evita rolagem */
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html { height: 100%; overflow: hidden; background: #fff; }
 
     .video-bg {
       position: fixed;
       top: 50%;
-      left: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
       width: 100vw;
-      height: auto;
-      min-height: 100vh;
-      transform: translateY(-50%);
-      object-fit: contain;
+      height: 100vh;
+      object-fit: cover;
       z-index: -1;
-      pointer-events: none; /* Evita interação do usuário com o vídeo */
-      background: rgb(255, 255, 255); /* Preenche as faixas acima / abaixo do vídeo */
+      background: #fff;
     }
 
     .conteudo {
@@ -62,44 +52,36 @@
 </head>
 <body>
 
-  <video class="video-bg" autoplay muted playsinline id="bgVideo">
+  <!-- ✅ Atributos críticos: autoplay + muted + playsinline + preload -->
+  <video class="video-bg" autoplay muted playsinline preload="auto" id="bgVideo">
     <source src="anim.mp4" type="video/mp4">
     Seu navegador não suporta vídeo.
   </video>
 
   <div class="conteudo">
-    <!-- Aqui você pode colocar uma logo ou frase -->
-    <!-- ou deixar vazio, se for só o vídeo -->
+    <!-- Conteúdo opcional -->
   </div>
 
-  <button id="playBtn">
-    ▶️ Tocar vídeo
-  </button>
+  <button id="playBtn">▶️ Tocar vídeo</button>
 
   <script>
     const video = document.getElementById('bgVideo');
     const playBtn = document.getElementById('playBtn');
 
-    // Tenta dar play automaticamente (iOS/Safari pode bloquear)
+    // Tenta dar play assim que possível
     function tryPlay() {
       video.play().catch(() => {
-        // Se não conseguir, mostra botão de play
+        // Se iOS bloquear, mostra botão
         playBtn.style.display = 'block';
       });
     }
 
-    // Tenta dar play ao carregar
     document.addEventListener('DOMContentLoaded', tryPlay);
 
-    // Tenta dar play ao interagir (iOS exige interação do usuário)
+    // Interação do usuário caso necessário
     playBtn.addEventListener('click', () => {
       video.play();
       playBtn.style.display = 'none';
-    });
-
-    // Quando o vídeo terminar, ele congela no último frame
-    video.addEventListener('ended', function () {
-      video.pause(); // só pra garantir
     });
   </script>
 
