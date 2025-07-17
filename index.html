@@ -14,10 +14,9 @@
     body, html {
       height: 100%;
       overflow: hidden; /* Evita rolagem */
-      background: #fff;
     }
 
-    .video-bg, .fallback-img {
+    .video-bg {
       position: fixed;
       top: 50%;
       left: 0;
@@ -27,11 +26,8 @@
       transform: translateY(-50%);
       object-fit: contain;
       z-index: -1;
-      background: #fff;
-    }
-
-    .fallback-img {
-      display: none; /* Oculta a imagem até ser necessário */
+      pointer-events: none; /* Evita interação do usuário com o vídeo */
+      background: rgb(255, 255, 255); /* Preenche as faixas acima / abaixo do vídeo */
     }
 
     .conteudo {
@@ -45,83 +41,37 @@
       font-size: 2rem;
       font-family: sans-serif;
     }
-
-    button {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2;
-      font-size: 2rem;
-      padding: 1rem 2rem;
-      background: #fff;
-      color: #333;
-      border: none;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
 
-  <!-- Vídeo -->
-  <video class="video-bg" autoplay muted playsinline preload="auto" id="bgVideo">
+  <video class="video-bg" autoplay muted playsinline id="bgVideo">
     <source src="anim.mp4" type="video/mp4">
     Seu navegador não suporta vídeo.
   </video>
 
-  <!-- Imagem fallback -->
-  <img src="fallback.jpg" alt="Imagem de fundo" class="fallback-img" id="fallbackImg">
-
   <div class="conteudo">
-    <!-- Conteúdo sobre o vídeo -->
+    <!-- Aqui você pode colocar uma logo ou frase -->
+    <!-- ou deixar vazio, se for só o vídeo -->
   </div>
-
-  <button id="playBtn">▶️ Tocar vídeo</button>
 
   <script>
     const video = document.getElementById('bgVideo');
-    const fallbackImg = document.getElementById('fallbackImg');
-    const playBtn = document.getElementById('playBtn');
 
-    function showFallback() {
-      video.style.display = 'none';
-      fallbackImg.style.display = 'block';
-    }
-
-    // Tenta dar play automaticamente
-    function tryPlay() {
-      video.play()
-        .then(() => {
-          console.log("Vídeo tocando...");
-        })
-        .catch(() => {
-          console.log("Autoplay bloqueado. Mostrando imagem.");
-          showFallback();
-        });
-    }
-
-    // Timeout extra de segurança (caso o play não aconteça)
-    setTimeout(() => {
+    function forcePlay() {
       if (video.paused) {
-        console.log("Timeout: vídeo não rodou. Mostrando imagem.");
-        showFallback();
+        video.play().catch(() => {});
       }
-    }, 2000);
+    }
 
-    document.addEventListener('DOMContentLoaded', tryPlay);
+    // Tenta dar play assim que possível
+    document.addEventListener('DOMContentLoaded', forcePlay);
+    window.addEventListener('load', forcePlay);
+    video.addEventListener('canplay', forcePlay);
 
-    // Caso queira permitir interação manual (opcional)
-    playBtn.addEventListener('click', () => {
-      video.play().then(() => {
-        playBtn.style.display = 'none';
-      });
-    });
-
+    // Quando o vídeo terminar, ele congela no último frame
     video.addEventListener('ended', function () {
-      video.pause();
+      video.pause(); // só pra garantir
     });
   </script>
 
