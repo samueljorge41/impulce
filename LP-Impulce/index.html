@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impulce</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      overflow: hidden; /* Evita rolagem */
+    }
+
+    .video-bg {
+      position: fixed;
+      top: 50%;
+      left: 0;
+      width: 100vw;
+      height: auto;
+      min-height: 100vh;
+      transform: translateY(-50%);
+      object-fit: contain;
+      z-index: -1;
+      pointer-events: none; /* Evita interação do usuário com o vídeo */
+      background: rgb(255, 255, 255); /* Preenche as faixas acima/abaixo do vídeo */
+    }
+
+    .conteudo {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: white;
+      font-size: 2rem;
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <video class="video-bg" autoplay muted playsinline id="bgVideo">
+    <source src="anim.mp4" type="video/mp4">
+    Seu navegador não suporta vídeo.
+  </video>
+
+  <div class="conteudo">
+    <!-- Aqui você pode colocar uma logo ou frase -->
+    <!-- ou deixar vazio, se for só o vídeo -->
+  </div>
+
+  <script>
+    const video = document.getElementById('bgVideo');
+
+    // Quando o vídeo terminar, ele congela no último frame
+    video.addEventListener('ended', function () {
+      video.pause(); // só pra garantir
+    });
+  </script>
+
+</body>
+</html>
